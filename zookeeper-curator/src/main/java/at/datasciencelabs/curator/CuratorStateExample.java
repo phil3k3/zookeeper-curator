@@ -17,14 +17,18 @@ class CuratorStateExample {
         CuratorFramework client = CuratorFrameworkFactory.newClient("localhost:2181", retryPolicy);
         client.start();
 
-        // write entries for AH idnr 300 with state ERROR
+        // write entry for AH idnr 300 with state ERROR
         IdempotentCuratorState ruleState300 = new IdempotentCuratorState(Paths.get("agent", "rule", "300"), RuleState.ERROR.name().getBytes());
         ruleState300.write(client);
 
-        // write entries for AH idnr 200 with state RUNNING
+        // write entry for AH idnr 200 with state RUNNING
         IdempotentCuratorState ruleState200 = new IdempotentCuratorState(Paths.get("agent", "rule", "200"), RuleState.RUNNING.name().getBytes());
 
+        // update entry for AH idnr 200 with state ERROR
+        IdempotentCuratorState ruleState200_Error = new IdempotentCuratorState(Paths.get("agent", "rule", "200"), RuleState.ERROR.name().getBytes());
+
         ruleState200.write(client);
+        ruleState200_Error.write(client);
 
         printRuleState(client, ruleState300);
         printRuleState(client, ruleState200);
